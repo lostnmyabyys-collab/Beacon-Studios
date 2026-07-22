@@ -1,18 +1,9 @@
-"""Beacon Studios AI Platform.
+"""Main package."""
 
-A production-grade, modular AI model ecosystem supporting multiple model families
-with advanced training, inference, and evaluation capabilities.
-"""
-
-__version__ = "0.1.0"
+__version__ = "1.0.0"
 __author__ = "Beacon Studios"
-__email__ = "info@beacon.studios"
+__description__ = "High-performance LLM platform"
 
-from beacon.logging import get_logger
+from beacon.api.server import app
 
-logger = get_logger(__name__)
-
-__all__ = [
-    "__version__",
-    "logger",
-]
+__all__ = ["app"]

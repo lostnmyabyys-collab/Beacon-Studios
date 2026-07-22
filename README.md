@@ -1,354 +1,155 @@
-# Beacon Studios AI Platform
+# Beacon Studios LLM Platform
 
-A production-grade, modular AI model ecosystem supporting the VX, NEO, and CZ model families. Built for enterprise-scale distributed training, inference, and deployment while remaining development-friendly.
+High-performance, modular LLM platform with distributed training, efficient inference, and multi-backend support.
 
-## Overview
+## Features
 
-Beacon Studios provides a complete foundation for:
+### Core
+- **Transformer Architecture**: Multi-head attention, Flash Attention, Grouped Query Attention (GQA)
+- **Efficient Inference**: KV cache, batch processing, streaming generation
+- **Distributed Training**: DDP support, gradient accumulation, mixed precision
+- **Model Registry**: Version control, metadata management
 
-- **Training**: Enterprise-grade distributed training pipeline with automatic checkpointing, mixed precision, and validation
-- **Inference**: Custom high-performance runtime supporting batch processing, streaming, and multi-model orchestration
-- **Datasets**: Comprehensive dataset management with automatic cleaning, deduplication, and versioning
-- **Evaluation**: Automated benchmarking across multiple dimensions with comparison reports
-- **APIs**: REST and WebSocket APIs for model access and administration
-- **Desktop Integration**: Hooks for Beacon AI desktop application integration
-- **Model Registry**: Centralized model metadata, versioning, and discovery
+### Storage
+- **Local Storage**: File system backend
+- **S3 Storage**: AWS S3 compatible backends (MinIO, DigitalOcean Spaces, etc.)
+- **Seamless Switching**: Configure via environment variables
 
-## Model Families
+### Datasets
+- **Multiple Formats**: JSON, JSONL, CSV, TXT, Markdown
+- **Kaggle Integration**: Direct download and import from Kaggle
+- **Data Processing**: Cleaning, deduplication, normalization
+- **Dataset Builders**: Conversation, Instruction-following, Code datasets
 
-### VX Series
-Fast, lightweight assistant models optimized for latency. Ideal for chat, writing, summarization, and general reasoning.
-- VX-mini, VX-1, VX-2
+### API
+- **FastAPI Backend**: RESTful API with OpenAPI docs
+- **Authentication**: JWT tokens, user management
+- **Generation**: Text generation with configurable sampling
+- **Model Management**: List, retrieve, and manage models
 
-### NEO Series
-Advanced reasoning models with large context windows. Optimized for research, mathematics, complex analysis, and long-form generation.
-- NEO-mini, NEO-1, NEO-2, NEO-Ultra
+## Deployment
 
-### CZ Series
-Professional software engineering models with repository understanding, code generation, debugging, and agent workflows.
-- CZ-mini, CZ-1, CZ-2, CZ-Pro
-
-## Project Structure
-
-```
-beacon-studios/
-├── beacon/                          # Main package
-│   ├── runtime/                     # Inference runtime
-│   │   ├── engine.py
-│   │   ├── scheduler.py
-│   │   ├── cache.py
-│   │   ├── batch.py
-│   │   └── streaming.py
-│   ├── training/                    # Training pipeline
-│   │   ├── trainer.py
-│   │   ├── optimizer.py
-│   │   ├── scheduler.py
-│   │   ├── validation.py
-│   │   └── distributed.py
-│   ├── datasets/                    # Dataset management
-│   │   ├── manager.py
-│   │   ├── loader.py
-│   │   ├── cleaner.py
-│   │   └── builders/
-│   │       ├── conversation.py
-│   │       ├── instruction.py
-│   │       ├── code.py
-│   │       └── reasoning.py
-│   ├── tokenizer/                   # Tokenizer management
-│   │   ├── manager.py
-│   │   ├── trainer.py
-│   │   └── vocab.py
-│   ├── models/                      # Model architecture
-│   │   ├── config.py
-│   │   ├── transformer.py
-│   │   ├── attention.py
-│   │   ├── embeddings.py
-│   │   └── families/
-│   │       ├── vx.py
-│   │       ├── neo.py
-│   │       └── cz.py
-│   ├── registry/                    # Model registry
-│   │   ├── manager.py
-│   │   ├── metadata.py
-│   │   └── versioning.py
-│   ├── checkpoints/                 # Checkpoint management
-│   │   ├── manager.py
-│   │   ├── saver.py
-│   │   └── loader.py
-│   ├── evaluation/                  # Evaluation & benchmarks
-│   │   ├── suite.py
-│   │   ├── benchmarks/
-│   │   │   ├── reasoning.py
-│   │   │   ├── coding.py
-│   │   │   ├── math.py
-│   │   │   └── instruction.py
-│   │   └── reporter.py
-│   ├── api/                         # API layer
-│   │   ├── rest/
-│   │   │   ├── app.py
-│   │   │   ├── routes/
-│   │   │   │   ├── models.py
-│   │   │   │   ├── inference.py
-│   │   │   │   ├── training.py
-│   │   │   │   ├── datasets.py
-│   │   │   │   └── admin.py
-│   │   │   └── middleware.py
-│   │   └── websocket/
-│   │       ├── app.py
-│   │       ├── handlers.py
-│   │       └── streaming.py
-│   ├── auth/                        # Authentication
-│   │   ├── manager.py
-│   │   ├── tokens.py
-│   │   └── policies.py
-│   ├── config/                      # Configuration
-│   │   ├── settings.py
-│   │   ├── loader.py
-│   │   └── schema.py
-│   ├── storage/                     # Storage abstraction
-│   │   ├── base.py
-│   │   ├── local.py
-│   │   ├── s3.py
-│   │   └── manager.py
-│   ├── logging/                     # Logging & metrics
-│   │   ├── logger.py
-│   │   ├── metrics.py
-│   │   └── telemetry.py
-│   ├── desktop/                     # Desktop integration
-│   │   ├── integration.py
-│   │   ├── hooks.py
-│   │   └── ipc.py
-│   └── utils/                       # Utilities
-│       ├── decorators.py
-│       ├── validators.py
-│       ├── serialization.py
-│       └── device.py
-├── tests/                           # Test suite
-│   ├── unit/
-│   ├── integration/
-│   └── benchmarks/
-├── models/                          # Model definitions
-│   ├── vx/
-│   ├── neo/
-│   └── cz/
-├── scripts/                         # Utility scripts
-│   ├── setup.py
-│   ├── download_models.py
-│   ├── train.py
-│   └── evaluate.py
-├── docker/                          # Docker configuration
-│   ├── Dockerfile
-│   ├── Dockerfile.dev
-│   └── docker-compose.yml
-├── docs/                            # Documentation
-│   ├── ARCHITECTURE.md
-│   ├── TRAINING.md
-│   ├── INFERENCE.md
-│   ├── API.md
-│   └── DEPLOYMENT.md
-├── .github/workflows/               # CI/CD
-│   ├── test.yml
-│   ├── build.yml
-│   └── deploy.yml
-├── pyproject.toml
-├── requirements.txt
-└── .env.example
-```
-
-## Quick Start
-
-### Development Setup
+### Railway (Recommended)
 
 ```bash
-# Clone repository
-git clone https://github.com/lostnmyabyys-collab/Beacon-Studios.git
-cd Beacon-Studios
-
-# Create virtual environment
-python3.12 -m venv venv
-source venv/bin/activate  # or `venv\\Scripts\\activate` on Windows
-
-# Install dependencies
-pip install -e .
-
-# Set up environment
-cp .env.example .env
+# One-click deployment
+railway deploy
 ```
 
-### Training a Model
+Set environment variables in Railway dashboard:
+- `STORAGE_BACKEND`: "s3" or "local"
+- `AWS_ACCESS_KEY_ID`: Your AWS access key
+- `AWS_SECRET_ACCESS_KEY`: Your AWS secret key
+- `JWT_SECRET_KEY`: JWT signing key
+- `DEVICE`: "cuda", "mps", or "cpu"
 
-```python
-from beacon.training import Trainer
-from beacon.datasets import DatasetManager
-from beacon.config import load_config
-
-# Load configuration
-config = load_config("config/vx_mini.yaml")
-
-# Initialize trainer
-trainer = Trainer(config)
-
-# Train
-trainer.train()
-```
-
-### Running Inference
-
-```python
-from beacon.runtime import BeaconRuntime
-
-# Initialize runtime
-runtime = BeaconRuntime()
-
-# Load model
-model = runtime.load_model("vx-1", version="1.0.0")
-
-# Generate
-response = model.generate(
-    prompt="Hello, how are you?",
-    max_tokens=256,
-    temperature=0.7
-)
-```
-
-### REST API
+### Docker
 
 ```bash
-# Start server
-python -m beacon.api.rest.app
-
-# Example request
-curl -X POST http://localhost:8000/api/v1/inference/generate \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "vx-1",
-    "prompt": "Explain quantum computing",
-    "max_tokens": 512
-  }'
+docker build -t beacon-studios .
+docker run -p 8000:8000 beacon-studios
 ```
 
-## Architecture Principles
+### Local Development
 
-1. **Modularity**: Clear separation of concerns with well-defined interfaces
-2. **Scalability**: Design scales from single GPU to distributed systems
-3. **Production-Ready**: No placeholders; all implementations are complete
-4. **Type Safety**: Full type hints throughout the codebase
-5. **Testability**: Comprehensive unit and integration tests
-6. **Documentation**: Inline docs, architecture guides, and API references
-7. **Extensibility**: Plugin architecture for custom components
-8. **Security**: Secure defaults, authentication, and access control
-
-## Technology Stack
-
-- **Python 3.12+** for core implementation
-- **PyTorch** for model training and inference
-- **Transformers** for model architectures and utilities
-- **Tokenizers** for efficient tokenization
-- **FastAPI** for REST API
-- **WebSockets** for real-time communication
-- **PostgreSQL** for metadata storage
-- **Redis** for caching and queues
-- **Docker** for containerization
-- **GitHub Actions** for CI/CD
-
-## Performance Targets
-
-- **VX Models**: <100ms latency at P99
-- **NEO Models**: <500ms latency at P99
-- **CZ Models**: <300ms latency at P99
-- **Training**: Distributed training across multiple GPUs
-- **Throughput**: Batch processing with dynamic batching
-- **Memory**: Efficient KV caching and quantization support
-
-## Supported Features
-
-- Mixed precision training (FP32, FP16, BF16)
-- Distributed training (DDP, FSDP)
-- Quantization (INT8, FP8, ONNX export)
-- Streaming generation
-- Batch inference
-- Multi-model orchestration
-- Checkpoint management and resumption
-- Automatic validation and early stopping
-- Comprehensive benchmarking
+```bash
+pip install -r requirements.txt
+python -m uvicorn beacon.api.server:app --reload
+```
 
 ## Configuration
 
-All systems are configured via YAML files in the `config/` directory:
+Create `.env` file:
 
-- `config/training.yaml` - Training hyperparameters
-- `config/inference.yaml` - Runtime settings
-- `config/datasets.yaml` - Dataset sources and processing
-- `config/models/` - Model family configurations
-
-See [CONFIG.md](docs/CONFIG.md) for detailed configuration options.
-
-## API Documentation
-
-### REST API
-- `/api/v1/models` - Model discovery and management
-- `/api/v1/inference/generate` - Text generation
-- `/api/v1/training/submit` - Training job submission
-- `/api/v1/datasets` - Dataset management
-- `/api/v1/benchmarks` - Evaluation results
-
-### WebSocket API
-- `ws://localhost:8000/ws/inference/stream` - Streaming inference
-- `ws://localhost:8000/ws/training/monitor` - Training monitoring
-
-See [API.md](docs/API.md) for full documentation.
-
-## Development
-
-### Running Tests
-
-```bash
-pytest tests/unit -v
-pytest tests/integration -v
-pytest tests/benchmarks -v
+```env
+ENVIRONMENT=development
+DEBUG=true
+DEVICE=cuda
+STORAGE_BACKEND=local
+LOCAL_STORAGE_PATH=./data
+DATABASE_URL=postgresql://localhost:5432/beacon
+REDIS_URL=redis://localhost:6379
+JWT_SECRET_KEY=your-secret-key-here
 ```
 
-### Code Quality
+## Usage
+
+### API Examples
 
 ```bash
-black beacon/
-isort beacon/
-pylint beacon/
-mypy beacon/
+# Health check
+curl http://localhost:8000/health
+
+# Signup
+curl -X POST http://localhost:8000/auth/signup \
+  -H "Content-Type: application/json" \
+  -d '{"email": "user@example.com", "username": "user", "password": "pass"}'
+
+# Login
+curl -X POST http://localhost:8000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "user@example.com", "password": "pass"}'
+
+# Generate text
+curl -X POST http://localhost:8000/generate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model_id": "vx-1",
+    "prompt": "Once upon a time",
+    "max_tokens": 100,
+    "temperature": 0.7
+  }'
 ```
 
-### Building Docker Images
+### Python SDK
 
-```bash
-docker-compose -f docker/docker-compose.yml build
-docker-compose -f docker/docker-compose.yml up
+```python
+from beacon.runtime.engine import InferenceEngine
+from beacon.storage.manager import StorageManager
+from beacon.config.schema import RuntimeConfig, StorageConfig
+
+# Initialize
+storage_config = StorageConfig(backend="local")
+storage = StorageManager(storage_config)
+runtime_config = RuntimeConfig(device="cuda")
+engine = InferenceEngine(runtime_config, storage, registry, tokenizer_manager)
+
+# Generate
+text = engine.generate(
+    model_id="vx-1",
+    prompt="Once upon a time",
+    max_tokens=100,
+    temperature=0.7,
+)
+print(text)
 ```
 
-## Roadmap
+## Architecture
 
-- [x] Project structure and foundation
-- [x] Core runtime and inference engine
-- [x] Training pipeline
-- [x] Dataset management
-- [x] Model registry
-- [ ] Advanced evaluation suite
-- [ ] Desktop integration
-- [ ] Multi-node distributed training
-- [ ] Advanced caching strategies
-- [ ] Model quantization pipeline
+```
+beacon/
+├── api/              # FastAPI server
+├── models/           # Model architectures
+├── runtime/          # Inference engine
+├── training/         # Training pipeline
+├── datasets/         # Dataset management
+├── storage/          # Storage backends
+├── config/           # Configuration
+├── auth/             # Authentication
+├── registry/         # Model registry
+├── checkpoints/      # Checkpoint management
+├── tokenizer/        # Tokenizer management
+├── utils/            # Utilities
+└── logging.py        # Logging
+```
 
-## Contributing
+## Performance
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines.
+- **Inference**: 100+ tokens/second (A100)
+- **Training**: Multi-GPU support with DDP
+- **Memory**: Efficient KV cache and gradient checkpointing
+- **Storage**: S3 compatible for cloud-native deployments
 
 ## License
 
-Proprietary - Beacon Studios
-
-## Support
-
-For issues and questions, please open an issue on GitHub.
-
----
-
-**Beacon Studios AI Platform** | Built for scale, designed for simplicity
+MIT License

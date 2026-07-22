@@ -1,0 +1,36 @@
+# Beacon Studios API - Railway Deployment Configuration
+
+railway:
+  services:
+    api:
+      image: beacon-studios
+      port: 8000
+      healthcheck:
+        path: /health
+        interval: 30s
+        timeout: 10s
+        retries: 3
+      environment:
+        - ENVIRONMENT=production
+        - DEBUG=false
+        - DEVICE=cuda
+        - STORAGE_BACKEND=s3
+        - INFERENCE_MAX_BATCH_SIZE=32
+      secrets:
+        - AWS_ACCESS_KEY_ID
+        - AWS_SECRET_ACCESS_KEY
+        - JWT_SECRET_KEY
+
+  volumes:
+    - /app/checkpoints
+    - /app/models
+    - /app/datasets
+
+  auto_deploy:
+    enabled: true
+    branch: main
+
+update_strategy: rolling
+replicas: 1
+min_replicas: 1
+max_replicas: 3
